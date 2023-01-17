@@ -18,7 +18,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: Install deps
-        run: sudo apt update && sudo apt install -y pbuilder git
+        run: sudo apt update && sudo apt install -y pbuilder git debian-archive-keyring debian-keyring
 
       - name: Clone reboostrap
         run: git clone https://salsa.debian.org/Revy/rebootstrap.git
