@@ -5,22 +5,25 @@ on:
     branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
+  schedule:
+    - cron: '0 20 * * *'
 
   workflow_dispatch:
   
 env:
-  USE_MIRROR: http://debian-archive.trafficmanager.net/debian/
+  USE_MIRROR: https://mirror.sjtu.edu.cn/debian/
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, x64]
     strategy:
       fail-fast: false
       matrix:
         ver: [12, 13]
     steps:
       - name: Install deps
-        run: sudo apt update && sudo apt install -y pbuilder git debian-archive-keyring debian-keyring
+        run: echo "host"
+        # sudo apt update && sudo apt install -y pbuilder git debian-archive-keyring debian-keyring
 
       - name: Clone reboostrap
         run: git clone https://salsa.debian.org/Revy/rebootstrap.git
