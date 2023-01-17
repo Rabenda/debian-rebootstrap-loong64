@@ -7,15 +7,17 @@ on:
     branches: [ "master" ]
 
   workflow_dispatch:
+  
+env:
+  USE_MIRROR: http://debian-archive.trafficmanager.net/debian/
 
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         ver: [12, 13]
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: Install deps
         run: sudo apt update && sudo apt install -y pbuilder git debian-archive-keyring debian-keyring
@@ -24,7 +26,7 @@ jobs:
         run: git clone https://salsa.debian.org/Revy/rebootstrap.git
 
       - name: Create base for reboostrap
-        run: sudo pbuilder create --distribution sid
+        run: sudo pbuilder create --distribution sid --mirror $USE_MIRROR
 
       - name: reboostrap for loong64
-        run: sudo pbuilder --execute rebootstrap/bootstrap.sh HOST_ARCH=loong64 GCC_VER=${{ matrix.ver }}
+        run: sudo pbuilder --execute rebootstrap/bootstrap.sh HOST_ARCH=loong64 GCC_VER=${{ matrix.ver }} MIRROR=$USE_MIRROR
