@@ -1,0 +1,30 @@
+name: reboostrap-loong64
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ver: [12, 13]
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Install deps
+        run: sudo apt update && sudo apt install -y pbuilder git
+
+      - name: Clone reboostrap
+        run: git clone https://salsa.debian.org/Revy/rebootstrap.git
+
+      - name: Create base for reboostrap
+        run: sudo pbuilder create --distribution sid
+
+      - name: reboostrap for loong64
+        run: sudo pbuilder --execute rebootstrap/bootstrap.sh HOST_ARCH=loong64 GCC_VER=${{ matrix.ver }}
