@@ -32,4 +32,11 @@ jobs:
         run: sudo pbuilder create --distribution sid --mirror $USE_MIRROR
 
       - name: reboostrap for loong64
-        run: sudo pbuilder --execute rebootstrap/bootstrap.sh HOST_ARCH=loong64 GCC_VER=${{ matrix.ver }} MIRROR=$USE_MIRROR
+        run: sudo pbuilder --execute rebootstrap/bootstrap.sh HOST_ARCH=loong64 GCC_VER=${{ matrix.ver }} MIRROR=$USE_MIRROR 2>&1 | tee build-${{ matrix.ver }}.log
+        
+      - name: Archive code coverage results
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-log-${{ matrix.ver }}
+          path: build-${{ matrix.ver }}.log
+          if-no-files-found: error
